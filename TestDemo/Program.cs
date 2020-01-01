@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace DataFLowBlockCancellationDemo
+namespace TestDemo
 {
     class Program
     {
-        
         static void Main(string[] args)
         {
             Caller().Wait();
             Console.ReadKey();
         }
+
         static async Task Caller()
         {
-            DataFlowBlockCancellation cancellationBlock = new DataFlowBlockCancellation();
-            await cancellationBlock.Execute();
+            DemoBlock demoBlock = new DemoBlock();
+            await demoBlock.Execute();
             Console.ReadKey();
         }
     }

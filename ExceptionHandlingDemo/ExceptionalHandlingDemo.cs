@@ -9,9 +9,9 @@ namespace ExceptionHandlingDemo
 {
     class ExceptionalHandlingDemo
     {
-        public void Execute()
+        public async void  Execute()
         {
-            var firstBlock = new TransformBlock<int, int>(n => 
+            var printAction = new ActionBlock<int>(n => 
             {
 
                 if (n < 0)
@@ -21,21 +21,21 @@ namespace ExceptionHandlingDemo
 
                 {
                     Thread.Sleep(2000);
-                    return n;
+                    Console.WriteLine("Action Block Printing"+n);
                 }
 
             }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 3});
 
-            var printAction = new ActionBlock<int>(n =>
+            var firstBlock = new TransformBlock<int,int>(n =>
             {
-                Thread.Sleep(1000);   
-                Console.WriteLine(n);
+                //Thread.Sleep(1000);
+                return n;
             },
             new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1}
 
             );
             firstBlock.LinkTo(printAction,new DataflowLinkOptions() { PropagateCompletion = true });
-            foreach(var i in new int[] {0,23,-34,54,56,67,998,689})
+            foreach(var i in new int[] {0,-23,-34,54,56,67,998,689,676})
             {
                 firstBlock.Post(i);
             }
@@ -44,27 +44,20 @@ namespace ExceptionHandlingDemo
             Console.WriteLine("Input count of action block  :"+printAction.InputCount);
 
 
-            
 
+            firstBlock.Complete();
             try
             {
-                printAction.Completion.Wait();
+                //Thread.Sleep(5000);
+                Console.WriteLine("FirstBlock Input count"+firstBlock.InputCount);
+                Console.WriteLine("FirstBlock Output count"+firstBlock.OutputCount);
+                Console.WriteLine("Print Block input count "+printAction.InputCount);
+                Task.WaitAll(firstBlock.Completion);               
                
             }
             catch(Exception ex)
             {
-                //whenever an exception is thrown in a block, it enters a faulted state and do the following:
-                //it should stop processing additional messages.
-                //It should clear its message queues, both input and output.
-                //It should fault its Completion task.
-                //If it is a target:
-                //It should decline any further incoming messages.
-                //It should release any reserved messages.
-                //Optionally, it may reserve and then release any postponed messages to notify the sources they will never be needed.
-                //If it is a source:
-                //    It should stop offering messages.
-                //    It should transfer the exception to any targets currently linked where those links were created with DataflowLinkOptions.PropagateCompletion == true.
-                //    It should unlink from currently linked targets
+                
                 Console.WriteLine("Inside Catch Block");
                 Console.WriteLine("Input Count of Faulted Transform Block:"+firstBlock.InputCount);//will be zero as ques are cleared when faulted
                 Console.WriteLine("Output Count of Faulted Transform Block:" + firstBlock.OutputCount);//will be zero as ques are cleared when faulted
@@ -72,6 +65,7 @@ namespace ExceptionHandlingDemo
                
                 Console.WriteLine(ex.InnerException.Message);
             }
+            Console.WriteLine("pipeline Executed");
             
             
 

@@ -27,7 +27,7 @@ namespace BufferBlockDemo
                 {
                     Console.WriteLine(i+" was not accepted by the buffer block");
                     
-                    Console.WriteLine("Making space for new value");
+                    Console.WriteLine("Making space for next value");
                     int n = buffer.Receive();
                     Console.WriteLine("value :" + n);
                 }
@@ -40,10 +40,9 @@ namespace BufferBlockDemo
 
         }
         public void ExecutePipeline()
-        {  //Only and Only Broadcast message can pass the same message to multiple Targets
-            //Buffer message will not pass the message to the second  target block, if it has been accepted by the first targetBlock
-            buffer.LinkTo(printEvenBlock,n=>n>=0);
-            buffer.LinkTo(printOddBlock,n=>n<10);
+        { 
+            buffer.LinkTo(printEvenBlock,n=>n<=0);
+            buffer.LinkTo(printOddBlock,n=>n>10);
             for (int i = 0; i < 10; i++)
             {
                 bool isAccepted = buffer.Post(i);
@@ -57,6 +56,16 @@ namespace BufferBlockDemo
                     Console.WriteLine("value :" + n);
                 }
 
+            }
+            buffer.Complete();
+            try
+            {
+                buffer.Completion.Wait();
+
+            }
+            catch(AggregateException ex)
+            {
+                Console.WriteLine(ex.InnerException.Message);
             }
 
         }

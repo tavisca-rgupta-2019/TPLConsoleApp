@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchedJoinBlockDemo", "Bat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExceptionHandlingDemo", "ExceptionHandlingDemo\ExceptionHandlingDemo.csproj", "{D296B23B-F7D9-435C-99D5-24996CFD74EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDemo", "TestDemo\TestDemo.csproj", "{BA36F426-C99E-4689-8962-D007ABD895FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPLDemo", "TPLDemo\TPLDemo.csproj", "{8BFC626D-6194-419E-881D-534597304C87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{D296B23B-F7D9-435C-99D5-24996CFD74EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D296B23B-F7D9-435C-99D5-24996CFD74EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D296B23B-F7D9-435C-99D5-24996CFD74EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA36F426-C99E-4689-8962-D007ABD895FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA36F426-C99E-4689-8962-D007ABD895FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA36F426-C99E-4689-8962-D007ABD895FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA36F426-C99E-4689-8962-D007ABD895FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BFC626D-6194-419E-881D-534597304C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BFC626D-6194-419E-881D-534597304C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BFC626D-6194-419E-881D-534597304C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BFC626D-6194-419E-881D-534597304C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

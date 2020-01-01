@@ -30,12 +30,12 @@ namespace TransformBlockDemo
         public async void  Execute()
         {
             //SourceBlock.LinkTo(ITargetBlock,Delegate for conditional passing of message to ITargetBlock)
-            firstBlock.LinkTo(secondBlock);
-            firstBlock.LinkTo(ThirdBlock);
+            //firstBlock.LinkTo(secondBlock);
+            //firstBlock.LinkTo(ThirdBlock);
             //Incase none of the Target block accepts the value offered by the souce block, the pipeline will go in a Deadlock state and the next 
             //message from the souce will not be offered to the target block as depicted by the following commented code
-            //firstBlock.LinkTo(secondBlock,n=>n<0);
-            //firstBlock.LinkTo(ThirdBlock,n=>n>2);
+            firstBlock.LinkTo(secondBlock, n => n < 0);
+            firstBlock.LinkTo(ThirdBlock, n => n > 2);
             //int consumedItem = firstBlock.Receive();
             //Console.WriteLine(consumedItem);
 

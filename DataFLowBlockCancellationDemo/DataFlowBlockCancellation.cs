@@ -12,7 +12,7 @@ namespace DataFLowBlockCancellationDemo
 
 
 
-        public void Execute()
+        public async  Task Execute()
         {
             
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -34,7 +34,7 @@ namespace DataFLowBlockCancellationDemo
 
             for (int i=0;i<2;i++)
             {
-                sourceBlock.Post(i);
+                await sourceBlock.SendAsync(i);
                
                
             }
@@ -53,8 +53,8 @@ namespace DataFLowBlockCancellationDemo
             {
 
 
-                buffer.Completion.Wait();
-                buffer.Completion.ContinueWith(task => Console.WriteLine(buffer.Completion.Status));
+                //buffer.Completion.Wait();
+                 buffer.Completion.ContinueWith(task => Console.WriteLine(buffer.Completion.Status));
                 
                 printAction.Completion.ContinueWith(task => Console.WriteLine("Print block was also completed"));
             }

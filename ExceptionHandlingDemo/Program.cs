@@ -5,7 +5,7 @@ namespace ExceptionHandlingDemo
 {
     class Program
     {
-        public static void Main(string[] args)
+        public static  void  Main(string[] args)
         {
             ExceptionalHandlingDemo demoBlock = new ExceptionalHandlingDemo();
             demoBlock.Execute();
