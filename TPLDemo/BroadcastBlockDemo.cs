@@ -6,51 +6,33 @@ using System.Threading.Tasks.Dataflow;
 namespace TPLDemo
 {
     public class BroadcastBlockDemo
-    {
-       
-        BroadcastBlock<int> sender = new BroadcastBlock<int>(num => Distribute(num));
-        ActionBlock<int> OddRecieverBlock = new ActionBlock<int>(num => PrintOdd(num), new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1 , BoundedCapacity = 1 });
-        ActionBlock<int> EvenRecieverBlock = new ActionBlock<int>(num => PrintEven(num), new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1 , BoundedCapacity = 1 });
-       
-        private static void PrintEven(int num)
+    {   BroadcastBlock<int> sender = new BroadcastBlock<int>(num => num);
+        ActionBlock<int> FirstRecieverBlock = new ActionBlock<int>(num => FirstPrintAction(num), new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1 , BoundedCapacity = 1 });
+        ActionBlock<int> SecondRecieverBlock = new ActionBlock<int>(num =>SecondPrintAction(num), new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1 , BoundedCapacity = 1 });
+        private static void SecondPrintAction(int num)
         {
             Thread.Sleep(TimeSpan.FromSeconds(1));
-            Console.WriteLine("Even "+num);
+            Console.WriteLine("Second Block Printing : " + num);
         }
-
-        private static int Distribute(int num)
-        {
-            
-            return num;
-        }
-
-        public static void PrintOdd(int num)
+        public static void FirstPrintAction(int num)
         {
             Thread.Sleep(TimeSpan.FromSeconds(1));
-            Console.WriteLine("Odd "+ num);
+            Console.WriteLine("First Block Printing "+ num);
         }
-
         public async Task  Execute()
-        {
-            sender.LinkTo(OddRecieverBlock,new DataflowLinkOptions() { PropagateCompletion = true});
-            sender.LinkTo(EvenRecieverBlock,new DataflowLinkOptions() { PropagateCompletion = true});
-
-
+        {   sender.LinkTo(FirstRecieverBlock,new DataflowLinkOptions() { PropagateCompletion = true});
+            sender.LinkTo(SecondRecieverBlock,new DataflowLinkOptions() { PropagateCompletion = true});
             for (int i=0;i<100;i++)
             {
                 await sender.SendAsync(i);
-                
-               
-                
                 Console.WriteLine("Added "+i);
-               
             }
             Thread.Sleep(1000);
             sender.Complete();
             try
             {
-                Task.WaitAll(OddRecieverBlock.Completion, EvenRecieverBlock.Completion);
-                await Task.WhenAll(OddRecieverBlock.Completion, EvenRecieverBlock.Completion).ContinueWith(task => Console.WriteLine("Pipeline Completed"),TaskContinuationOptions.OnlyOnRanToCompletion);
+                await Task.WhenAll(FirstRecieverBlock.Completion, SecondRecieverBlock.Completion);
+                await Task.WhenAll(FirstRecieverBlock.Completion, SecondRecieverBlock.Completion).ContinueWith(task => Console.WriteLine("Pipeline Completed"),TaskContinuationOptions.OnlyOnRanToCompletion);
             }
             catch(AggregateException ex)
             {

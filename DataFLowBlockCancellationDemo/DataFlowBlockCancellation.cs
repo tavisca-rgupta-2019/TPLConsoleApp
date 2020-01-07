@@ -18,7 +18,7 @@ namespace DataFLowBlockCancellationDemo
             CancellationTokenSource cts = new CancellationTokenSource();
             CancellationToken token = cts.Token;
             //For cancellation of the block We could issue a cancellation Token and pass it as a ExecutionDataflowBlockOptions Property
-            var sourceBlock = new TransformBlock<int,int>(async n => await sleepAction(n));
+            var sourceBlock = new TransformBlock<int,int>(async n => await sleepAction(n),new ExecutionDataflowBlockOptions() { CancellationToken = token});
             var buffer = new BufferBlock<int>(new ExecutionDataflowBlockOptions() { CancellationToken = token});
             var printAction = new ActionBlock<int>(n => Console.WriteLine(n));
             //by setting MaxMessages property to a <int> value, we can ensure that the targetBlock will get unlinked form the source block after
@@ -43,7 +43,7 @@ namespace DataFLowBlockCancellationDemo
             
            
             cts.Cancel();
-            printAction.Complete();
+            sourceBlock.Complete();
             
             
             //if we will cancel the block inside a pipeline, then the block preceeding it will not be able to complete but the blocks
@@ -54,8 +54,7 @@ namespace DataFLowBlockCancellationDemo
 
 
                 //buffer.Completion.Wait();
-                 buffer.Completion.ContinueWith(task => Console.WriteLine(buffer.Completion.Status));
-                
+                await printAction.Completion;
                 printAction.Completion.ContinueWith(task => Console.WriteLine("Print block was also completed"));
             }
             //if we try to wait for the completion of a canceled block it will throw an aggregate exception. for example bufferBlock. 

@@ -1,4 +1,4 @@
-﻿using BufferBlockDemo;
+﻿
 using System;
 using System.Threading.Tasks;
 
@@ -10,11 +10,10 @@ namespace TPLDemo
         {
             Caller().Wait();
             Console.ReadKey();
-            
         }
 
 
-        static async Task Caller()
+        private static async Task Caller()
         {
             Console.WriteLine("Enter one of the following Block choice for demo :");
             Console.WriteLine("1  BufferBlock\n2  BroadcastBlock\n3  WriteOnceBlock\n4  TransformBlock\n5  TransformManyBlock\n6  BatchBlock\n" +
@@ -23,9 +22,8 @@ namespace TPLDemo
             switch(choice)
             {
                 case 1: var bufferDemo = new BufferBlockDemo();
-                        //await bufferDemo.Execute();
                         await bufferDemo.ExecutePipeline();
-                     break;
+                        break;
                 case 2: var broadcastDemo = new BroadcastBlockDemo();
                         await broadcastDemo.Execute();
                         break;
@@ -55,11 +53,7 @@ namespace TPLDemo
                         break;
                 default: Console.WriteLine("Invalid Choice");
                         break;
-
-
-
             }
-             
         }
     }
 }
